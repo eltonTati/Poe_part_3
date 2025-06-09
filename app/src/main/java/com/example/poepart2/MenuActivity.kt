@@ -26,10 +26,10 @@ class MenuActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var mostExpenseText: TextView
     private lateinit var mostExpenseIcon: ImageView
-    private lateinit var others: TextView
+
     private lateinit var label_other_expenses: TextView
     private lateinit var perctext: TextView
-    private lateinit var othersIcon: ImageView
+
     private lateinit var otherExpensesList: LinearLayout
     private lateinit var otherExpensesContainer: LinearLayout
 
@@ -91,8 +91,10 @@ class MenuActivity : AppCompatActivity() {
                         // 👇 Seulement ici on change : calcul du pourcentage basé sur la somme des goals
                         db.collection("budget_goals").document(userId)
                             .collection("goals").get().addOnSuccessListener { goalsSnapshot ->
-                                val totalGoal = goalsSnapshot.sumOf { it.getDouble("amount") ?: 0.0 }
-                                val percentage = if (totalGoal != 0.0) ((expenses / totalGoal) * 100).toInt() else 0
+                                val totalGoal =
+                                    goalsSnapshot.sumOf { it.getDouble("amount") ?: 0.0 }
+                                val percentage =
+                                    if (totalGoal != 0.0) ((expenses / totalGoal) * 100).toInt() else 0
 
                                 progressBar.progress = percentage
                                 perctext.text = "you are at $percentage% of your budget goal"
@@ -114,13 +116,13 @@ class MenuActivity : AppCompatActivity() {
                         mostExpenseText.text = "No expenses now"
                         mostExpenseIcon.setImageResource(0)
 
-                        others.text = "No expenses now"
-                        othersIcon.setImageResource(0)
+
                         return@addSnapshotListener
                     }
 
                     val expenses = snapshot.documents.mapNotNull { it.data }
-                    val sortedExpenses = expenses.sortedByDescending { (it["amount"] as? Number)?.toDouble() ?: 0.0 }
+                    val sortedExpenses =
+                        expenses.sortedByDescending { (it["amount"] as? Number)?.toDouble() ?: 0.0 }
 
                     val most = sortedExpenses.firstOrNull()
                     if (most != null) {
@@ -210,7 +212,6 @@ class MenuActivity : AppCompatActivity() {
             startActivity(Intent(this, UserScreenActivity::class.java))
         }
     }
-
     override fun onDestroy() {
         super.onDestroy()
         balanceListener?.remove()
